@@ -244,5 +244,11 @@ export enum DICT_TYPE {
   IOT_PLUGIN_STATUS = 'iot_plugin_status', // IOT 插件状态
   IOT_PLUGIN_TYPE = 'iot_plugin_type', // IOT 插件类型
   IOT_DATA_BRIDGE_DIRECTION_ENUM = 'iot_data_bridge_direction_enum', // 桥梁方向
-  IOT_DATA_BRIDGE_TYPE_ENUM = 'iot_data_bridge_type_enum' // 桥梁类型
+  IOT_DATA_BRIDGE_TYPE_ENUM = 'iot_data_bridge_type_enum', // 桥梁类型
+
+  // ========== Amazon 模块 ==========
+  AMAZON_TASK_TYPE_ENUM = 'amazon_task_type_enum', // 任务类型
+  AMAZON_TASK_SHARD_ENUM = 'amazon_task_shard_enum' // 任务共享状态
+
+  // ========== Amazon 模块 ==========
 }

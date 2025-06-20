@@ -17,11 +17,11 @@ const request = (option: any) => {
 export default {
   get: async <T = any>(option: any) => {
     const res = await request({ method: 'GET', ...option })
-    return res.data as unknown as T
+    return (res.data !== undefined ? res.data : res) as unknown as T
   },
   post: async <T = any>(option: any) => {
     const res = await request({ method: 'POST', ...option })
-    return res.data as unknown as T
+    return (res.data !== undefined ? res.data : res) as unknown as T
   },
   postOriginal: async (option: any) => {
     const res = await request({ method: 'POST', ...option })
@@ -29,11 +29,11 @@ export default {
   },
   delete: async <T = any>(option: any) => {
     const res = await request({ method: 'DELETE', ...option })
-    return res.data as unknown as T
+    return (res.data !== undefined ? res.data : res) as unknown as T
   },
   put: async <T = any>(option: any) => {
     const res = await request({ method: 'PUT', ...option })
-    return res.data as unknown as T
+    return (res.data !== undefined ? res.data : res) as unknown as T
   },
   download: async <T = any>(option: any) => {
     const res = await request({ method: 'GET', responseType: 'blob', ...option })
