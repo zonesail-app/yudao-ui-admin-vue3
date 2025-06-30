@@ -18,117 +18,12 @@
               </div>
             </div>
           </el-col>
-          <el-col :xl="12" :lg="12" :md="12" :sm="24" :xs="24">
-            <div class="h-70px flex items-center justify-end lt-sm:mt-10px">
-              <div class="px-8px text-right">
-                <div class="mb-16px text-14px text-gray-400">{{ t('workplace.project') }}</div>
-                <CountTo
-                  class="text-20px"
-                  :start-val="0"
-                  :end-val="totalSate.project"
-                  :duration="2600"
-                />
-              </div>
-              <el-divider direction="vertical" />
-              <div class="px-8px text-right">
-                <div class="mb-16px text-14px text-gray-400">{{ t('workplace.toDo') }}</div>
-                <CountTo
-                  class="text-20px"
-                  :start-val="0"
-                  :end-val="totalSate.todo"
-                  :duration="2600"
-                />
-              </div>
-              <el-divider direction="vertical" border-style="dashed" />
-              <div class="px-8px text-right">
-                <div class="mb-16px text-14px text-gray-400">{{ t('workplace.access') }}</div>
-                <CountTo
-                  class="text-20px"
-                  :start-val="0"
-                  :end-val="totalSate.access"
-                  :duration="2600"
-                />
-              </div>
-            </div>
-          </el-col>
         </el-row>
       </el-skeleton>
     </el-card>
   </div>
 
   <el-row class="mt-8px" :gutter="8" justify="space-between">
-    <el-col :xl="16" :lg="16" :md="24" :sm="24" :xs="24" class="mb-8px">
-      <el-card shadow="never">
-        <template #header>
-          <div class="h-3 flex justify-between">
-            <span>{{ t('workplace.project') }}</span>
-            <el-link
-              type="primary"
-              :underline="false"
-              href="https://github.com/yudaocode"
-              target="_blank"
-            >
-              {{ t('action.more') }}
-            </el-link>
-          </div>
-        </template>
-        <el-skeleton :loading="loading" animated>
-          <el-row>
-            <el-col
-              v-for="(item, index) in projects"
-              :key="`card-${index}`"
-              :xl="8"
-              :lg="8"
-              :md="8"
-              :sm="24"
-              :xs="24"
-            >
-              <el-card
-                shadow="hover"
-                class="mr-5px mt-5px cursor-pointer"
-                @click="handleProjectClick(item.message)"
-              >
-                <div class="flex items-center">
-                  <Icon
-                    :icon="item.icon"
-                    :size="25"
-                    class="mr-8px"
-                    :style="{ color: item.color }"
-                  />
-                  <span class="text-16px">{{ item.name }}</span>
-                </div>
-                <div class="mt-12px text-12px text-gray-400">{{ t(item.message) }}</div>
-                <div class="mt-12px flex justify-between text-12px text-gray-400">
-                  <span>{{ item.personal }}</span>
-                  <span>{{ formatTime(item.time, 'yyyy-MM-dd') }}</span>
-                </div>
-              </el-card>
-            </el-col>
-          </el-row>
-        </el-skeleton>
-      </el-card>
-
-      <el-card shadow="never" class="mt-8px">
-        <el-skeleton :loading="loading" animated>
-          <el-row :gutter="20" justify="space-between">
-            <el-col :xl="10" :lg="10" :md="24" :sm="24" :xs="24">
-              <el-card shadow="hover" class="mb-8px">
-                <el-skeleton :loading="loading" animated>
-                  <Echart :options="pieOptionsData" :height="280" />
-                </el-skeleton>
-              </el-card>
-            </el-col>
-            <el-col :xl="14" :lg="14" :md="24" :sm="24" :xs="24">
-              <el-card shadow="hover" class="mb-8px">
-                <el-skeleton :loading="loading" animated>
-                  <Echart :options="barOptionsData" :height="280" />
-                </el-skeleton>
-              </el-card>
-            </el-col>
-          </el-row>
-        </el-skeleton>
-      </el-card>
-    </el-col>
     <el-col :xl="8" :lg="8" :md="24" :sm="24" :xs="24" class="mb-8px">
       <el-card shadow="never">
         <template #header>
@@ -147,34 +42,6 @@
               </div>
             </el-col>
           </el-row>
-        </el-skeleton>
-      </el-card>
-      <el-card shadow="never" class="mt-8px">
-        <template #header>
-          <div class="h-3 flex justify-between">
-            <span>{{ t('workplace.notice') }}</span>
-            <el-link type="primary" :underline="false">{{ t('action.more') }}</el-link>
-          </div>
-        </template>
-        <el-skeleton :loading="loading" animated>
-          <div v-for="(item, index) in notice" :key="`dynamics-${index}`">
-            <div class="flex items-center">
-              <el-avatar :src="avatar" :size="35" class="mr-16px">
-                <img src="@/assets/imgs/avatar.gif" alt="" />
-              </el-avatar>
-              <div>
-                <div class="text-14px">
-                  <Highlight :keys="item.keys.map((v) => t(v))">
-                    {{ item.type }} : {{ item.title }}
-                  </Highlight>
-                </div>
-                <div class="mt-16px text-12px text-gray-400">
-                  {{ formatTime(item.date, 'yyyy-MM-dd') }}
-                </div>
-              </div>
-            </div>
-            <el-divider />
-          </div>
         </el-skeleton>
       </el-card>
     </el-col>
@@ -317,34 +184,10 @@ const getShortcut = async () => {
       color: '#1fdaca'
     },
     {
-      name: '商城中心',
-      icon: 'ep:shop',
-      url: '/mall/home',
+      name: '关键词排名',
+      icon: 'carbon:arrow-up-right',
+      url: '/amazon/keyword-task',
       color: '#ff6b6b'
-    },
-    {
-      name: 'AI 大模型',
-      icon: 'tabler:ai',
-      url: '/ai/chat',
-      color: '#7c3aed'
-    },
-    {
-      name: 'ERP 系统',
-      icon: 'simple-icons:erpnext',
-      url: '/erp/home',
-      color: '#3fb27f'
-    },
-    {
-      name: 'CRM 系统',
-      icon: 'simple-icons:civicrm',
-      url: '/crm/backlog',
-      color: '#4daf1bc9'
-    },
-    {
-      name: 'IoT 物联网',
-      icon: 'fa-solid:hdd',
-      url: '/iot/home',
-      color: '#1a73e8'
     }
   ]
   shortcut = Object.assign(shortcut, data)

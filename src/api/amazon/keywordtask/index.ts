@@ -52,5 +52,13 @@ export const KeywordTaskApi = {
   // 导出关键词排名任务 Excel
   exportKeywordTask: async (params) => {
     return await request.download({ url: `/amazon/keyword-task/export-excel`, params })
+  },
+
+  updateKeywordTaskStatus: async (id: number, enabled: number) => {
+    const data = {
+      id,
+      enabled
+    }
+    return await request.put({ url: '/amazon/keyword-task/update-status', data: data })
   }
 }

@@ -15,7 +15,8 @@
           id="keywords"
           v-model="formData.keywords"
           type="textarea"
-          placeholder="请输入关键词列表"
+          :rows="6"
+          placeholder="请输入关键词， 每行一个关键词"
         />
       </el-form-item>
       <el-form-item label="城市列表" prop="cities" for="cities">
@@ -26,7 +27,7 @@
           filterable
           collapse-tags
           collapse-tags-tooltip
-          placeholder="请选择城市"
+          placeholder="请选择城市，请不要超过10个城市"
           style="width: 100%"
           :filter-method="handleCityFilter"
           @visible-change="handleCityFilter('')"
@@ -58,7 +59,8 @@
           id="asins"
           v-model="formData.asins"
           type="textarea"
-          placeholder="请输入ASIN列表"
+          :rows="6"
+          placeholder="请输入ASIN， 每行一个ASIN"
         />
       </el-form-item>
 
@@ -149,9 +151,9 @@ const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   id: undefined,
   taskName: undefined,
-  keywords: '',
+  keywords: [],
   cities: [],
-  asins: '',
+  asins: [],
   cronTab: undefined,
   taskType: undefined,
   shared: undefined,
@@ -166,7 +168,6 @@ const formRules = reactive({
   taskType: [{ required: true, message: '任务类型不能为空', trigger: 'blur' }],
   cronTab: [
     {
-      required: true,
       message: 'Cron表达式不能为空',
       trigger: 'blur',
       validator: (rule: any, value: any, callback: any) => {
@@ -180,7 +181,6 @@ const formRules = reactive({
   ],
   startTime: [
     {
-      required: true,
       message: '开始时间不能为空',
       trigger: 'blur',
       validator: (rule: any, value: any, callback: any) => {
@@ -194,7 +194,6 @@ const formRules = reactive({
   ],
   endTime: [
     {
-      required: true,
       message: '结束时间不能为空',
       trigger: 'blur',
       validator: (rule: any, value: any, callback: any) => {
@@ -328,6 +327,8 @@ const submitForm = async () => {
     }
     if (data.asins && typeof data.asins === 'string') {
       data.asins = data.asins.split('\n').filter((item) => item.trim() !== '')
+    } else if (!data.asins) {
+      data.asins = []
     }
     if (formType.value === 'create') {
       await KeywordTaskApi.createKeywordTask(data as unknown as KeywordTask)
@@ -351,7 +352,7 @@ const resetForm = () => {
     taskName: undefined,
     keywords: '',
     cities: [],
-    asins: '',
+    asins: [],
     cronTab: undefined,
     taskType: undefined,
     shared: undefined,
@@ -378,415 +379,518 @@ const handleSelectAllChange = (val: boolean) => {
 const cities = [
   {
     postcode: '10008',
-    name: 'New york'
+    name: 'New York',
+    city: 'newyorkcity'
   },
   {
     postcode: '10001',
-    name: 'New York'
+    name: 'New York',
+    city: 'newyorkcity'
   },
   {
     postcode: '91942',
-    name: 'La Mesa'
+    name: 'Lamesa',
+    city: 'lamesa'
   },
   {
     postcode: '92408',
-    name: 'San Bernardino'
+    name: 'San Bernardino',
+    city: 'sanbernardino'
   },
   {
     postcode: '92551',
-    name: 'Moreno Valley'
+    name: 'Moreno Valley',
+    city: 'morenovalley'
   },
   {
     postcode: '95376',
-    name: 'Tracy'
+    name: 'Tracy',
+    city: 'tracy'
   },
   {
     postcode: '95363',
-    name: 'Patterson'
+    name: 'Patterson',
+    city: 'patterson'
   },
   {
     postcode: '92374',
-    name: 'Redlands'
+    name: 'Redlands',
+    city: 'redlands'
   },
   {
     postcode: '95206',
-    name: 'Stockton'
+    name: 'Stockton',
+    city: 'stockton'
   },
   {
     postcode: '92376',
-    name: 'Rialto'
+    name: 'Rialto',
+    city: 'rialto'
   },
   {
     postcode: '95391',
-    name: 'Tracy'
+    name: 'Tracy',
+    city: 'tracy'
   },
   {
     postcode: '92518',
-    name: 'March Air Reserve Base'
+    name: 'March Air Reserve Base',
+    city: 'marchairforcebase'
   },
   {
     postcode: '95837',
-    name: 'Sacramento'
+    name: 'Sacramento',
+    city: 'sacramento'
   },
   {
     postcode: '90001',
-    name: 'Los Angeles'
+    name: 'Los Angeles',
+    city: 'losangeles'
   },
   {
     postcode: '90002',
-    name: 'Los Angeles'
+    name: 'Los Angeles',
+    city: 'losangeles'
   },
   {
     postcode: '60106',
-    name: 'Bensenville'
+    name: 'Bensenville',
+    city: 'bensenville'
   },
   {
     postcode: '60433',
-    name: 'Joliet'
+    name: 'Joliet',
+    city: 'joliet'
   },
   {
     postcode: '60446',
-    name: 'Romeoville'
+    name: 'Romeoville',
+    city: 'romeoville'
   },
   {
     postcode: '60449',
-    name: 'Monee'
+    name: 'Monee',
+    city: 'monee'
   },
   {
     postcode: '60085',
-    name: 'Waukegan'
+    name: 'Waukegan',
+    city: 'waukegan'
   },
   {
     postcode: '60502',
-    name: 'Aurora'
+    name: 'Aurora',
+    city: 'aurora'
   },
   {
     postcode: '60191',
-    name: 'Wood Dale'
+    name: 'Wood Dale',
+    city: 'wooddale'
   },
   {
     postcode: '62025',
-    name: 'Edwardsville'
+    name: 'Edwardsville',
+    city: 'edwardsville'
   },
   {
     postcode: '60601',
-    name: 'Chicago'
+    name: 'Chicago',
+    city: 'chicago'
   },
   {
     postcode: '85043',
-    name: 'Phoenix'
+    name: 'Phoenix',
+    city: 'phoenix'
   },
   {
     postcode: '85338',
-    name: 'Goodyear'
+    name: 'Goodyear',
+    city: 'goodyear'
   },
   {
     postcode: '08691',
-    name: 'Robbinsville'
+    name: 'Robbinsville',
+    city: 'robbinsville'
   },
   {
     postcode: '07001',
-    name: 'Avenel'
+    name: 'Avenel',
+    city: 'avenel'
   },
   {
     postcode: '07008',
-    name: 'Carteret'
+    name: 'Carteret',
+    city: 'carteret'
   },
   {
     postcode: '08085',
-    name: 'Swedesboro'
+    name: 'Swedesboro',
+    city: 'swedesboro'
   },
   {
     postcode: '08512',
-    name: 'Cranbury'
+    name: 'Cranbury',
+    city: 'cranbury'
   },
   {
     postcode: '33570',
-    name: 'Ruskin'
+    name: 'Ruskin',
+    city: 'ruskin'
   },
   {
     postcode: '33811',
-    name: 'Lakeland'
+    name: 'Lakeland',
+    city: 'lakeland'
   },
   {
     postcode: '33182',
-    name: 'Miami'
+    name: 'Miami',
+    city: 'miami'
   },
   {
     postcode: '32221',
-    name: 'Jacksonville'
+    name: 'Jacksonville',
+    city: 'jacksonville'
   },
   {
     postcode: '67337',
-    name: 'Coffeyville'
+    name: 'Coffeyville',
+    city: 'coffeyville'
   },
   {
     postcode: '66219',
-    name: 'Lenexa'
+    name: 'Lenexa',
+    city: 'lenexa'
   },
   {
     postcode: '66021',
-    name: 'Edgerton'
+    name: 'Edgerton',
+    city: 'edgerton'
   },
   {
     postcode: '46075',
-    name: 'Whitestown'
+    name: 'Whitestown',
+    city: 'whitestown'
   },
   {
     postcode: '46168',
-    name: 'Plainfield'
+    name: 'Plainfield',
+    city: 'plainfield'
   },
   {
     postcode: '46231',
-    name: 'Indianapolis'
+    name: 'Indianapolis',
+    city: 'indianapolis'
   },
   {
     postcode: '47130',
-    name: 'Jeffersonville'
+    name: 'Jeffersonville',
+    city: 'jeffersonville'
   },
   {
     postcode: '40511',
-    name: 'Lexington'
+    name: 'Lexington',
+    city: 'lexington'
   },
   {
     postcode: '42718',
-    name: 'Campbellsville'
+    name: 'Campbellsville',
+    city: 'campbellsville'
   },
   {
     postcode: '40218',
-    name: 'Louisville'
+    name: 'Louisville',
+    city: 'louisville'
   },
   {
     postcode: '40165',
-    name: 'Shepherdsville'
+    name: 'Shepherdsville',
+    city: 'shepherdsville'
   },
   {
     postcode: '41048',
-    name: 'Hebron'
+    name: 'Hebron',
+    city: 'hebron'
   },
   {
     postcode: '37416',
-    name: 'Chattanooga'
+    name: 'Chattanooga',
+    city: 'chattanooga'
   },
   {
     postcode: '37310',
-    name: 'Charleston'
+    name: 'Charleston',
+    city: 'charleston'
   },
   {
     postcode: '37090',
-    name: 'Lebanon'
+    name: 'Lebanon',
+    city: 'lebanon'
   },
   {
     postcode: '37067',
-    name: 'Franklin'
+    name: 'Franklin',
+    city: 'franklin'
   },
   {
     postcode: '37127',
-    name: 'Murfreesboro'
+    name: 'Murfreesboro',
+    city: 'murfreesboro'
   },
   {
     postcode: '37217',
-    name: 'Nashville'
+    name: 'Nashville',
+    city: 'nashville'
   },
   {
     postcode: '18031',
-    name: 'Breinigsville'
+    name: 'Breinigsville',
+    city: 'breinigsville'
   },
   {
     postcode: '17339',
-    name: 'Lewisberry'
+    name: 'Lewisberry',
+    city: 'lewisberry'
   },
   {
     postcode: '18202',
-    name: 'Hazleton'
+    name: 'Hazleton',
+    city: 'hazleton'
   },
   {
     postcode: '18424',
-    name: 'Gouldsboro'
+    name: 'Gouldsboro',
+    city: 'gouldsboro'
   },
   {
     postcode: '17112',
-    name: 'Harrisburg'
+    name: 'Harrisburg',
+    city: 'harrisburg'
   },
   {
     postcode: '15205',
-    name: 'Pittsburgh'
+    name: 'Pittsburgh',
+    city: 'pittsburgh'
   },
   {
     postcode: '18512',
-    name: 'Scranton'
+    name: 'Scranton',
+    city: 'scranton'
   },
   {
     postcode: '18643',
-    name: 'Pittston'
+    name: 'Pittston',
+    city: 'pittston'
   },
   {
     postcode: '17013',
-    name: 'Carlisle'
+    name: 'Carlisle',
+    city: 'carlisle'
   },
   {
     postcode: '19720',
-    name: 'New Castle'
+    name: 'New Castle',
+    city: 'newcastle'
   },
   {
     postcode: '19709',
-    name: 'Middletown'
+    name: 'Middletown',
+    city: 'middletown'
   },
   {
     postcode: '75019',
-    name: 'Coppell'
+    name: 'Coppell',
+    city: 'coppell'
   },
   {
     postcode: '78154',
-    name: 'Schertz'
+    name: 'Schertz',
+    city: 'schertz'
   },
   {
     postcode: '76177',
-    name: 'Fort Worth'
+    name: 'Fort Worth',
+    city: 'fortworth'
   },
   {
     postcode: '75261',
-    name: 'Dallas'
+    name: 'Dallas',
+    city: 'dallas'
   },
   {
     postcode: '77338',
-    name: 'Humble'
+    name: 'Humble',
+    city: 'humble'
   },
   {
     postcode: '76155',
-    name: 'Fort Worth'
+    name: 'Fort Worth',
+    city: 'fortworth'
   },
   {
     postcode: '75241',
-    name: 'Dallas'
+    name: 'Dallas',
+    city: 'dallas'
   },
   {
     postcode: '77001',
-    name: 'Houston'
+    name: 'Houston',
+    city: 'houston'
   },
   {
     postcode: '77003',
-    name: 'Houston'
+    name: 'Houston',
+    city: 'houston'
   },
   {
     postcode: '77038',
-    name: 'Houston'
+    name: 'Houston',
+    city: 'houston'
   },
   {
     postcode: '29172',
-    name: 'West Columbia'
+    name: 'West Columbia',
+    city: 'westcolumbia'
   },
   {
     postcode: '29303',
-    name: 'Spartanburg'
+    name: 'Spartanburg',
+    city: 'spartanburg'
   },
   {
     postcode: '89408',
-    name: 'Fernley'
+    name: 'Fernley',
+    city: 'fernley'
   },
   {
     postcode: '89030',
-    name: 'North Las Vegas'
+    name: 'North Las Vegas',
+    city: 'northlasvegas'
   },
   {
     postcode: '23803',
-    name: 'Petersburg'
+    name: 'Petersburg',
+    city: 'petersburg'
   },
   {
     postcode: '23836',
-    name: 'Chester'
+    name: 'Chester',
+    city: 'chester'
   },
   {
     postcode: '98390',
-    name: 'Sumner'
+    name: 'Sumner',
+    city: 'sumner'
   },
   {
     postcode: '98327',
-    name: 'Dupont'
+    name: 'Dupont',
+    city: 'dupont'
   },
   {
     postcode: '98032',
-    name: 'Kent'
+    name: 'Kent',
+    city: 'kent'
   },
   {
     postcode: '98144',
-    name: 'Seattle'
+    name: 'Seattle',
+    city: 'seattle'
   },
   {
     postcode: '98005',
-    name: 'Bellevue'
+    name: 'Bellevue',
+    city: 'bellevue'
   },
   {
     postcode: '53144',
-    name: 'Kenosha'
+    name: 'Kenosha',
+    city: 'kenosha'
   },
   {
     postcode: '30344',
-    name: 'Atlanta'
+    name: 'Atlanta',
+    city: 'atlanta'
   },
   {
     postcode: '30549',
-    name: 'Jeffersonville'
+    name: 'Jeffersonville',
+    city: 'jeffersonville'
   },
   {
     postcode: '02720',
-    name: 'Fall River'
+    name: 'Fall River',
+    city: 'fallriver'
   },
   {
     postcode: '28214',
-    name: 'Charlotte'
+    name: 'Charlotte',
+    city: 'charlotte'
   },
   {
     postcode: '55379',
-    name: 'Shakopee'
+    name: 'Shakopee',
+    city: 'shakopee'
   },
   {
     postcode: '41018',
-    name: 'Erlanger'
+    name: 'Erlanger',
+    city: 'erlanger'
   },
   {
     postcode: '48150',
-    name: 'Livonia'
+    name: 'Livonia',
+    city: 'livonia'
   },
   {
     postcode: '66102',
-    name: 'Kansas City'
+    name: 'Kansas City',
+    city: 'kansascity'
   },
   {
     postcode: '89506',
-    name: 'Reno'
+    name: 'Reno',
+    city: 'reno'
   },
   {
     postcode: '21224',
-    name: 'Baltimore'
+    name: 'Baltimore',
+    city: 'baltimore'
   },
   {
     postcode: '43125',
-    name: 'Groveport'
+    name: 'Groveport',
+    city: 'groveport'
   },
   {
     postcode: '20012',
-    name: 'Washington'
+    name: 'Washington',
+    city: 'washington'
   },
   {
     postcode: '08518',
-    name: 'Florence'
+    name: 'Florence',
+    city: 'florence'
   },
   {
     postcode: '06095',
-    name: 'Windsor'
+    name: 'Windsor',
+    city: 'windsor'
   },
   {
     postcode: '17015',
-    name: 'Carlisle'
+    name: 'Carlisle',
+    city: 'carlisle'
   },
   {
     postcode: '03063',
-    name: 'Nashua'
+    name: 'Nashua',
+    city: 'nashua'
   },
   {
     postcode: '20001',
-    name: 'Washington'
+    name: 'Washington',
+    city: 'washington'
   }
 ]
 

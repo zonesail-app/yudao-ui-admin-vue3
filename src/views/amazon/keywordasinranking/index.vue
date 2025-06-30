@@ -8,15 +8,18 @@
       :inline="true"
       label-width="68px"
     >
-      <el-form-item label="采集日期" prop="crawlDate">
+      <el-form-item label="爬取日期" prop="crawlDate">
         <el-date-picker
-          v-model="selectedDate"
-          type="date"
-          value-format="YYYY-MM-DD"
-          placeholder="请选择采集日期"
+          v-model="queryParams.crawlDate"
+          value-format="YYYY-MM-DD HH:mm:ss"
+          type="daterange"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          :default-time="[new Date('1 00:00:00'), new Date('1 23:59:59')]"
           class="!w-220px"
         />
       </el-form-item>
+
       <el-form-item>
         <el-button @click="handleQuery"><Icon icon="ep:search" class="mr-5px" /> 搜索</el-button>
         <el-button @click="resetQuery"><Icon icon="ep:refresh" class="mr-5px" /> 重置</el-button>
@@ -26,7 +29,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['amazon:keyword-ranking:export']"
+          v-hasPermi="['amazon:keyword-asin-ranking:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -53,12 +56,10 @@
           <dict-tag :type="DICT_TYPE.AMAZON_RANK_TYPE_ENUM" :value="scope.row.rankType" />
         </template>
       </el-table-column>
-
       <el-table-column label="排名" align="center" prop="rankPosition" />
       <el-table-column label="位置" align="center" prop="position" />
       <el-table-column label="页码" align="center" prop="pageNumber" />
       <el-table-column label="页内位置" align="center" prop="positionInPage" />
-
       <el-table-column
         label="采集时间"
         align="center"
@@ -77,29 +78,28 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <KeywordRankingForm ref="formRef" @success="getList" />
+  <KeywordAsinRankingForm ref="formRef" @success="getList" />
 </template>
 
 <script setup lang="ts">
-import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { isEmpty } from '@/utils/is'
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { KeywordRankingApi, KeywordRanking } from '@/api/amazon/keywordranking'
-import KeywordRankingForm from './KeywordRankingForm.vue'
+import { KeywordAsinRankingApi, KeywordAsinRanking } from '@/api/amazon/keywordasinranking'
+import KeywordAsinRankingForm from './KeywordAsinRankingForm.vue'
+import { DICT_TYPE } from '@/utils/dict'
 import { useRoute } from 'vue-router'
 
 /** 关键词排名任务结果 列表 */
-defineOptions({ name: 'KeywordRanking' })
+defineOptions({ name: 'KeywordAsinRanking' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 const route = useRoute()
 
 const loading = ref(true) // 列表的加载中
-const list = ref<KeywordRanking[]>([]) // 列表的数据
+const list = ref<KeywordAsinRanking[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
-const selectedDate = ref() // 选择的日期
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
@@ -113,7 +113,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    const data = await KeywordRankingApi.getKeywordRankingPage(queryParams)
+    const data = await KeywordAsinRankingApi.getKeywordAsinRankingPage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
@@ -130,7 +130,6 @@ const handleQuery = () => {
 /** 重置按钮操作 */
 const resetQuery = () => {
   queryFormRef.value.resetFields()
-  selectedDate.value = undefined
   handleQuery()
 }
 
@@ -146,7 +145,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await KeywordRankingApi.deleteKeywordRanking(id)
+    await KeywordAsinRankingApi.deleteKeywordAsinRanking(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -158,14 +157,14 @@ const handleDeleteBatch = async () => {
   try {
     // 删除的二次确认
     await message.delConfirm()
-    await KeywordRankingApi.deleteKeywordRankingList(checkedIds.value)
+    await KeywordAsinRankingApi.deleteKeywordAsinRankingList(checkedIds.value)
     message.success(t('common.delSuccess'))
     await getList()
   } catch {}
 }
 
 const checkedIds = ref<number[]>([])
-const handleRowCheckboxChange = (records: KeywordRanking[]) => {
+const handleRowCheckboxChange = (records: KeywordAsinRanking[]) => {
   checkedIds.value = records.map((item) => item.id)
 }
 
@@ -176,21 +175,13 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await KeywordRankingApi.exportKeywordRanking(queryParams)
+    const data = await KeywordAsinRankingApi.exportKeywordAsinRanking(queryParams)
     download.excel(data, '关键词排名任务结果.xls')
   } catch {
   } finally {
     exportLoading.value = false
   }
 }
-
-watch(selectedDate, (newDate) => {
-  if (newDate) {
-    queryParams.crawlDate = newDate
-  } else {
-    queryParams.crawlDate = undefined
-  }
-})
 
 /** 初始化 **/
 onMounted(() => {

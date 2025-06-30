@@ -37,15 +37,6 @@
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
-        <el-button
-          type="danger"
-          plain
-          :disabled="isEmpty(checkedIds)"
-          @click="handleDeleteBatch"
-          v-hasPermi="['amazon:keyword-task:delete']"
-        >
-          <Icon icon="ep:delete" class="mr-5px" /> 批量删除
-        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -63,19 +54,48 @@
       <el-table-column type="selection" width="55" />
       <el-table-column label="ID" align="center" prop="id" />
       <el-table-column label="任务名称" align="center" prop="taskName" />
-      <el-table-column label="启用状态" align="center" prop="enabled" />
-      <el-table-column label="任务类型" align="center" prop="taskType" />
-      <el-table-column label="任务共享状态" align="center" prop="shared" />
-      <el-table-column label="描述" align="center" prop="description" />
+      <el-table-column label="任务状态" key="enabled">
+        <template #default="scope">
+          <el-switch
+            v-model="scope.row.enabled"
+            :active-value="0"
+            :inactive-value="1"
+            @change="handleStatusChange(scope.row)"
+          />
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="任务类型" prop="taskType">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.AMAZON_TASK_TYPE_ENUM" :value="scope.row.taskType" />
+        </template>
+      </el-table-column>
       <el-table-column
         label="创建时间"
         align="center"
         prop="createTime"
         :formatter="dateFormatter"
-        width="180px"
+        width="240px"
       />
       <el-table-column label="操作" align="center" min-width="120px">
         <template #default="scope">
+          <el-button
+            link
+            type="primary"
+            @click="handleView(scope.row.id)"
+            v-hasPermi="['amazon:keyword-task:query']"
+          >
+            爬取结果
+          </el-button>
+          <el-button
+            link
+            type="primary"
+            @click="handleViewAsinMatch(scope.row.id)"
+            v-hasPermi="['amazon:keyword-task:query']"
+          >
+            ASIN匹配
+          </el-button>
+
           <el-button
             link
             type="primary"
@@ -115,12 +135,15 @@ import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { KeywordTaskApi, KeywordTask } from '@/api/amazon/keywordtask'
 import KeywordTaskForm from './KeywordTaskForm.vue'
+import { CommonStatusEnum } from '@/utils/constants'
+import { useRouter } from 'vue-router'
 
 /** 关键词排名任务 列表 */
 defineOptions({ name: 'KeywordTask' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
+const router = useRouter()
 
 const loading = ref(true) // 列表的加载中
 const list = ref<KeywordTask[]>([]) // 列表的数据
@@ -166,6 +189,19 @@ const openForm = (type: string, id?: number) => {
   formRef.value.open(type, id)
 }
 
+/** 修改任务状态 */
+const handleStatusChange = async (row: KeywordTask) => {
+  // 消息弹窗
+  const text = row.enabled === 0 ? '启用' : '禁用'
+  try {
+    await message.confirm('确认要"' + text + '""' + row.taskName + '"任务吗?')
+    await KeywordTaskApi.updateKeywordTaskStatus(row.id, row.enabled)
+    message.success(text + '成功')
+  } catch {
+    row.enabled = row.enabled === 0 ? 1 : 0
+  }
+}
+
 /** 删除按钮操作 */
 const handleDelete = async (id: number) => {
   try {
@@ -208,6 +244,26 @@ const handleExport = async () => {
   } finally {
     exportLoading.value = false
   }
+}
+
+/** 查看任务结果 */
+const handleView = (id: number) => {
+  router.push({
+    path: '/amazon/keyword-ranking',
+    query: {
+      taskId: id
+    }
+  })
+}
+
+/** 查看任务结果 */
+const handleViewAsinMatch = (id: number) => {
+  router.push({
+    path: '/amazon/keyword-asin-ranking',
+    query: {
+      taskId: id
+    }
+  })
 }
 
 /** 初始化 **/

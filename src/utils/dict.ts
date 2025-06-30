@@ -248,7 +248,9 @@ export enum DICT_TYPE {
 
   // ========== Amazon 模块 ==========
   AMAZON_TASK_TYPE_ENUM = 'amazon_task_type_enum', // 任务类型
-  AMAZON_TASK_SHARD_ENUM = 'amazon_task_shard_enum' // 任务共享状态
+  AMAZON_TASK_SHARD_ENUM = 'amazon_task_shard_enum', // 任务共享状态
+  AMAZON_RANK_TYPE_ENUM = 'amazon_rank_type' // 排名类型
 
-  // ========== Amazon 模块 ==========
+
+  
 }
