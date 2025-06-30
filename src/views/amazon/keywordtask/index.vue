@@ -99,6 +99,15 @@
           <el-button
             link
             type="primary"
+            @click="handleExecLog(scope.row.id)"
+            v-hasPermi="['amazon:keyword-task:query']"
+          >
+            执行日志
+          </el-button>
+
+          <el-button
+            link
+            type="primary"
             @click="openForm('update', scope.row.id)"
             v-hasPermi="['amazon:keyword-task:update']"
           >
@@ -260,6 +269,16 @@ const handleView = (id: number) => {
 const handleViewAsinMatch = (id: number) => {
   router.push({
     path: '/amazon/keyword-asin-ranking',
+    query: {
+      taskId: id
+    }
+  })
+}
+
+/** 查看执行日志 */
+const handleExecLog = (id: number) => {
+  router.push({
+    path: '/amazon/task-exec-log',
     query: {
       taskId: id
     }
