@@ -28,15 +28,6 @@
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
-        <el-button
-          type="success"
-          plain
-          @click="handleExport"
-          :loading="exportLoading"
-          v-hasPermi="['amazon:keyword-task:export']"
-        >
-          <Icon icon="ep:download" class="mr-5px" /> 导出
-        </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
@@ -85,15 +76,7 @@
             @click="handleView(scope.row.id)"
             v-hasPermi="['amazon:keyword-task:query']"
           >
-            爬取结果
-          </el-button>
-          <el-button
-            link
-            type="primary"
-            @click="handleViewAsinMatch(scope.row.id)"
-            v-hasPermi="['amazon:keyword-task:query']"
-          >
-            ASIN匹配
+            监控结果
           </el-button>
 
           <el-button
@@ -172,7 +155,7 @@ const exportLoading = ref(false) // 导出的加载中
 const getList = async () => {
   loading.value = true
   try {
-    queryParams.scraperType = 1
+    queryParams.scraperType = 2
     const data = await KeywordTaskApi.getKeywordTaskPage(queryParams)
     list.value = data.list
     total.value = data.total
@@ -259,17 +242,7 @@ const handleExport = async () => {
 /** 查看任务结果 */
 const handleView = (id: number) => {
   router.push({
-    path: '/amazon/keyword-ranking',
-    query: {
-      taskId: id
-    }
-  })
-}
-
-/** 查看任务结果 */
-const handleViewAsinMatch = (id: number) => {
-  router.push({
-    path: '/amazon/keyword-asin-ranking',
+    path: '/amazon/listing-price',
     query: {
       taskId: id
     }
