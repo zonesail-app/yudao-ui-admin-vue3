@@ -82,20 +82,12 @@
           <el-button
             link
             type="primary"
-            @click="handleExecLog(scope.row.id)"
+            @click="handleDataStatistics(scope.row.id)"
             v-hasPermi="['amazon:keyword-task:query']"
           >
-            执行日志
+            数据统计
           </el-button>
 
-          <el-button
-            link
-            type="primary"
-            @click="openForm('update', scope.row.id)"
-            v-hasPermi="['amazon:keyword-task:update']"
-          >
-            编辑
-          </el-button>
           <el-button
             link
             type="danger"
@@ -243,6 +235,16 @@ const handleExport = async () => {
 const handleView = (id: number) => {
   router.push({
     path: '/amazon/listing-price',
+    query: {
+      taskId: id
+    }
+  })
+}
+
+/** 查看数据统计 */
+const handleDataStatistics = (id: number) => {
+  router.push({
+    path: '/amazon/price-statistics',
     query: {
       taskId: id
     }

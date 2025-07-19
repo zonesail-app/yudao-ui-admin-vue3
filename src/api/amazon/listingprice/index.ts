@@ -22,6 +22,22 @@ export interface ListingPrice {
           remark: string; // 备注
   }
 
+/** 价格分析请求 */
+export interface PriceAnalysisReq {
+  taskId: number; // 任务ID
+  startDate: string; // 开始日期 YYYY-MM-DD
+  endDate: string; // 结束日期 YYYY-MM-DD
+  priceType?: 'buyboxPrice' | 'price' | 'primePrice' | 'listPrice'; // 价格类型，默认为buyboxPrice
+}
+
+/** 价格分析响应 */
+export interface PriceAnalysisResp {
+  analysisData: Record<string, Record<string, number>>; // ASIN -> 日期 -> 价格
+  asinList: string[]; // ASIN列表
+  dateList: string[]; // 日期列表
+  averagePrice: number; // 平均价格
+}
+
 // 价格监控结果 API
 export const ListingPriceApi = {
   // 查询价格监控结果分页
@@ -57,5 +73,10 @@ export const ListingPriceApi = {
   // 导出价格监控结果 Excel
   exportListingPrice: async (params) => {
     return await request.download({ url: `/amazon/listing-price/export-excel`, params })
+  },
+
+  // 获取价格分析数据
+  getPriceAnalysisData: async (data: PriceAnalysisReq): Promise<PriceAnalysisResp> => {
+    return await request.post({ url: `/amazon/listing-price/analysis`, data })
   }
 }

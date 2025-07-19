@@ -17,7 +17,7 @@
           v-model="formData.asins"
           type="textarea"
           :rows="10"
-          placeholder="请输入ASIN， 每行一个ASIN"
+          placeholder="请输入ASIN， 每行一个ASIN。仅适用于领星中存在的asin数据。"
         />
       </el-form-item>
 

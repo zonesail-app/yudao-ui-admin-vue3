@@ -10,56 +10,13 @@
       <el-form-item label="任务名称" prop="taskName" for="taskName">
         <el-input id="taskName" v-model="formData.taskName" placeholder="请输入任务名称" />
       </el-form-item>
-      <el-form-item label="关键词列表" prop="keywords" for="keywords">
-        <el-input
-          id="keywords"
-          v-model="formData.keywords"
-          type="textarea"
-          :rows="6"
-          placeholder="请输入关键词， 每行一个关键词"
-        />
-      </el-form-item>
-      <el-form-item label="城市列表" prop="cities" for="cities">
-        <el-select
-          id="cities"
-          v-model="formData.cities"
-          multiple
-          filterable
-          collapse-tags
-          collapse-tags-tooltip
-          placeholder="请选择城市，请不要超过10个城市"
-          style="width: 100%"
-          :filter-method="handleCityFilter"
-          @visible-change="handleCityFilter('')"
-        >
-          <template #header>
-            <el-checkbox
-              :model-value="isAllSelected"
-              :indeterminate="isIndeterminate"
-              @change="handleSelectAllChange"
-            >
-              全选
-            </el-checkbox>
-          </template>
-          <el-option
-            v-for="city in cityOptions"
-            :key="city.postcode"
-            :label="`${city.name} (${city.postcode})`"
-            :value="city.postcode"
-          >
-            <span style="float: left">{{ city.name }}</span>
-            <span style="float: right; color: var(--el-text-color-secondary); font-size: 13px">
-              {{ city.postcode }}
-            </span>
-          </el-option>
-        </el-select>
-      </el-form-item>
+
       <el-form-item label="ASIN列表" prop="asins" for="asins">
         <el-input
           id="asins"
           v-model="formData.asins"
           type="textarea"
-          :rows="6"
+          :rows="10"
           placeholder="请输入ASIN， 每行一个ASIN"
         />
       </el-form-item>
@@ -85,10 +42,6 @@
               readonly
               class="cron-display-input"
             />
-            <el-button type="primary" @click="openCronDialog">
-              <el-icon><Setting /></el-icon>
-              设置
-            </el-button>
           </div>
           <div v-if="formData.cronTab" class="cron-description">
             {{ getCronDescription(formData.cronTab) }}
@@ -128,15 +81,11 @@
       <el-button @click="dialogVisible = false">取 消</el-button>
     </template>
   </Dialog>
-
-  <!-- Cron表达式设置对话框 -->
-  <CronScheduler ref="cronSchedulerRef" @confirm="handleCronConfirm" />
 </template>
 <script setup lang="ts">
 import { getIntDictOptions, DICT_TYPE } from '@/utils/dict'
 import { KeywordTaskApi, KeywordTask } from '@/api/amazon/keywordtask'
 import { Setting } from '@element-plus/icons-vue'
-import CronScheduler from './CronScheduler.vue'
 
 /** 关键词排名任务 表单 */
 defineOptions({ name: 'KeywordTaskForm' })
@@ -151,8 +100,6 @@ const formType = ref('') // 表单的类型：create - 新增；update - 修改
 const formData = ref({
   id: undefined,
   taskName: undefined,
-  keywords: [],
-  cities: [],
   asins: [],
   cronTab: undefined,
   taskType: undefined,
@@ -160,12 +107,10 @@ const formData = ref({
   description: undefined,
   startTime: undefined,
   endTime: undefined,
-  scraperType: 1
+  scraperType: 2
 })
 const formRules = reactive({
   taskName: [{ required: true, message: '任务名称不能为空', trigger: 'blur' }],
-  keywords: [{ required: true, message: '关键词列表不能为空', trigger: 'blur' }],
-  cities: [{ required: true, message: '城市列表不能为空', trigger: 'change' }],
   taskType: [{ required: true, message: '任务类型不能为空', trigger: 'blur' }],
   cronTab: [
     {
@@ -239,6 +184,12 @@ watch(isScheduledTask, (newVal) => {
     formData.value.cronTab = undefined
   }
 })
+
+const getCronDescription = (cron: string) => {
+  if (cron === '0 9 * * *') return '每天早上9:00执行'
+  if (cron === '0 */2 * * *') return '每2小时执行一次'
+  return '自定义时间执行'
+}
 
 const shortcuts = [
   {
@@ -317,16 +268,13 @@ const submitForm = async () => {
   formLoading.value = true
   try {
     const data = { ...formData.value }
-    data.scraperType = 1
     // 字符串转数组
-    if (data.keywords && typeof data.keywords === 'string') {
-      data.keywords = data.keywords.split('\n').filter((item) => item.trim() !== '')
-    }
     if (data.asins && typeof data.asins === 'string') {
       data.asins = data.asins.split('\n').filter((item) => item.trim() !== '')
     } else if (!data.asins) {
       data.asins = []
     }
+    data.scraperType = 4
     if (formType.value === 'create') {
       await KeywordTaskApi.createKeywordTask(data as unknown as KeywordTask)
       message.success(t('common.createSuccess'))
@@ -334,7 +282,6 @@ const submitForm = async () => {
       await KeywordTaskApi.updateKeywordTask(data as unknown as KeywordTask)
       message.success(t('common.updateSuccess'))
     }
-    data.scraperType = 1
     dialogVisible.value = false
     // 发送操作成功的事件
     emit('success')
@@ -348,8 +295,6 @@ const resetForm = () => {
   formData.value = {
     id: undefined,
     taskName: undefined,
-    keywords: '',
-    cities: [],
     asins: [],
     cronTab: undefined,
     taskType: undefined,
@@ -903,23 +848,6 @@ const handleCityFilter = (query: string) => {
   } else {
     cityOptions.value = cities
   }
-}
-
-// CronScheduler 相关方法
-const cronSchedulerRef = ref()
-
-const openCronDialog = () => {
-  cronSchedulerRef.value?.open(formData.value.cronTab)
-}
-
-const handleCronConfirm = (cron: string) => {
-  formData.value.cronTab = cron
-}
-
-const getCronDescription = (cron: string) => {
-  if (cron === '0 9 * * *') return '每天早上9:00执行'
-  if (cron === '0 */2 * * *') return '每2小时执行一次'
-  return '自定义时间执行'
 }
 </script>
 

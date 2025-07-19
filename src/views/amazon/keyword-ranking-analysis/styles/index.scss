@@ -1,0 +1,401 @@
+// Amazon关键词排名分析页面样式
+
+// 全局变量
+:root {
+  --keyword-analysis-primary: #409eff;
+  --keyword-analysis-success: #67c23a;
+  --keyword-analysis-warning: #e6a23c;
+  --keyword-analysis-danger: #f56c6c;
+  --keyword-analysis-info: #909399;
+
+  --keyword-analysis-bg: #ffffff;
+  --keyword-analysis-bg-light: #f8f9fa;
+  --keyword-analysis-border: #e4e7ed;
+  --keyword-analysis-text: #333333;
+  --keyword-analysis-text-light: #666666;
+  --keyword-analysis-text-lighter: #999999;
+
+  --keyword-analysis-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  --keyword-analysis-shadow-light: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+
+  --keyword-analysis-border-radius: 6px;
+  --keyword-analysis-border-radius-small: 4px;
+}
+
+// 通用样式类
+.keyword-analysis {
+  // 间距工具类
+  .mb-1 {
+    margin-bottom: 4px;
+  }
+  .mb-2 {
+    margin-bottom: 8px;
+  }
+  .mb-3 {
+    margin-bottom: 12px;
+  }
+  .mb-4 {
+    margin-bottom: 16px;
+  }
+  .mb-5 {
+    margin-bottom: 20px;
+  }
+
+  .mr-1 {
+    margin-right: 4px;
+  }
+  .mr-2 {
+    margin-right: 8px;
+  }
+  .mr-3 {
+    margin-right: 12px;
+  }
+  .mr-4 {
+    margin-right: 16px;
+  }
+
+  .ml-1 {
+    margin-left: 4px;
+  }
+  .ml-2 {
+    margin-left: 8px;
+  }
+  .ml-3 {
+    margin-left: 12px;
+  }
+  .ml-4 {
+    margin-left: 16px;
+  }
+
+  // 文本工具类
+  .text-primary {
+    color: var(--keyword-analysis-primary);
+  }
+  .text-success {
+    color: var(--keyword-analysis-success);
+  }
+  .text-warning {
+    color: var(--keyword-analysis-warning);
+  }
+  .text-danger {
+    color: var(--keyword-analysis-danger);
+  }
+  .text-info {
+    color: var(--keyword-analysis-info);
+  }
+
+  .text-xs {
+    font-size: 12px;
+  }
+  .text-sm {
+    font-size: 13px;
+  }
+  .text-base {
+    font-size: 14px;
+  }
+  .text-lg {
+    font-size: 16px;
+  }
+  .text-xl {
+    font-size: 18px;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+  .text-left {
+    text-align: left;
+  }
+  .text-right {
+    text-align: right;
+  }
+
+  .font-normal {
+    font-weight: 400;
+  }
+  .font-medium {
+    font-weight: 500;
+  }
+  .font-semibold {
+    font-weight: 600;
+  }
+  .font-bold {
+    font-weight: 700;
+  }
+
+  // 布局工具类
+  .flex {
+    display: flex;
+  }
+  .flex-col {
+    flex-direction: column;
+  }
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  .items-center {
+    align-items: center;
+  }
+  .justify-center {
+    justify-content: center;
+  }
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  // 卡片样式
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--keyword-analysis-text);
+  }
+
+  // 表格样式增强
+  .matrix-table {
+    .el-table__header {
+      th {
+        background-color: var(--keyword-analysis-bg-light);
+        color: var(--keyword-analysis-text);
+        font-weight: 600;
+        border-bottom: 2px solid var(--keyword-analysis-border);
+      }
+    }
+
+    .el-table__body {
+      tr:hover {
+        background-color: var(--keyword-analysis-bg-light);
+      }
+    }
+  }
+
+  // ASIN标签样式
+  .asin-tag {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: var(--keyword-analysis-border-radius-small);
+    font-size: 11px;
+    font-weight: 500;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: var(--keyword-analysis-shadow-light);
+    }
+  }
+
+  // 位置标签样式
+  .position-tag {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-weight: 600;
+    color: var(--keyword-analysis-primary);
+  }
+
+  // 关键词标签样式
+  .keyword-tag {
+    margin: 2px 4px 2px 0;
+    font-size: 12px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+
+  // 统计卡片样式
+  .stats-card {
+    text-align: center;
+    padding: 20px;
+    background: var(--keyword-analysis-bg);
+    border-radius: var(--keyword-analysis-border-radius);
+    box-shadow: var(--keyword-analysis-shadow-light);
+    transition: all 0.3s ease;
+
+    &:hover {
+      box-shadow: var(--keyword-analysis-shadow);
+      transform: translateY(-2px);
+    }
+
+    .stats-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--keyword-analysis-primary);
+      margin-bottom: 8px;
+      line-height: 1;
+    }
+
+    .stats-label {
+      font-size: 14px;
+      color: var(--keyword-analysis-text-light);
+      margin: 0;
+    }
+  }
+
+  // 图表容器样式
+  .chart-container {
+    background: var(--keyword-analysis-bg);
+    border-radius: var(--keyword-analysis-border-radius);
+    padding: 16px;
+    box-shadow: var(--keyword-analysis-shadow-light);
+
+    .chart-title {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--keyword-analysis-text);
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--keyword-analysis-border);
+    }
+
+    .chart {
+      width: 100%;
+      min-height: 300px;
+    }
+  }
+
+  // 加载状态样式
+  .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: var(--keyword-analysis-text-light);
+
+    .loading-text {
+      margin-top: 16px;
+      font-size: 14px;
+    }
+  }
+
+  // 空状态样式
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--keyword-analysis-text-lighter);
+
+    .empty-icon {
+      font-size: 64px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-text {
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .empty-description {
+      font-size: 14px;
+      color: var(--keyword-analysis-text-lighter);
+    }
+  }
+
+  // 响应式设计
+  @media (max-width: 768px) {
+    .card-header {
+      flex-direction: column;
+      gap: 8px;
+      text-align: center;
+    }
+
+    .stats-card {
+      margin-bottom: 16px;
+    }
+
+    .chart-container {
+      margin-bottom: 16px;
+
+      .chart {
+        min-height: 250px;
+      }
+    }
+
+    .matrix-table {
+      font-size: 12px;
+
+      .asin-tag {
+        font-size: 10px;
+        padding: 2px 6px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    padding: 12px;
+
+    .chart-container {
+      padding: 12px;
+
+      .chart {
+        min-height: 200px;
+      }
+    }
+
+    .stats-card {
+      padding: 16px;
+
+      .stats-value {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+// 动画效果
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+// 滚动条样式
+.keyword-analysis {
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--keyword-analysis-bg-light);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--keyword-analysis-border);
+    border-radius: 4px;
+
+    &:hover {
+      background: var(--keyword-analysis-text-lighter);
+    }
+  }
+}
